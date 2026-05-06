@@ -7,12 +7,15 @@ import {
   Param,
   Delete,
   Inject,
+  Query,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { NATS_SERVICE } from '../config';
 import { UpdateStatusDto, UploadDniDto, UploadImageDto } from './dto';
+import { PaginationDto } from '../common';
+import { catchError } from 'rxjs';
 
 @Controller('users')
 export class UsersController {
@@ -24,13 +27,21 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
-    return this.client.send('users.find_all', {});
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.client.send('users.find_all', paginationDto).pipe(
+      catchError((err) => {
+        throw new RpcException(err.message);
+      }),
+    );
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.client.send('users.find_one', { id });
+    return this.client.send('users.find_one', { id }).pipe(
+      catchError((err) => {
+        throw new RpcException(err.message);
+      }),
+    );
   }
 
   @Patch(':id')
