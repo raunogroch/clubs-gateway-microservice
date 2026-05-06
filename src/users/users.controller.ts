@@ -16,6 +16,7 @@ import { NATS_SERVICE } from '../config';
 import { UpdateStatusDto, UploadDniDto, UploadImageDto } from './dto';
 import { PaginationDto } from '../common';
 import { catchError } from 'rxjs';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Controller('users')
 export class UsersController {
@@ -23,7 +24,11 @@ export class UsersController {
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    return this.client.send('users.create', createUserDto);
+    return this.client.send('users.create', createUserDto).pipe(
+      catchError((err) => {
+        throw new RpcException(err.message);
+      }),
+    );
   }
 
   @Get()
@@ -54,33 +59,40 @@ export class UsersController {
     return this.client.send('users.delete', { id });
   }
 
-  @Patch('upload-image/:userId')
-  uploadImage(
-    @Param('userId') userId: string,
-    @Body() uploadImageDto: UploadImageDto,
-  ) {
+  @Patch('upload-image/:id')
+  uploadImage(@Param('id') id: string, @Body() uploadImageDto: UploadImageDto) {
     return this.client.send('users.upload_image', {
       ...uploadImageDto,
-      userId,
+      id,
     });
   }
 
-  @Patch('upload-dni/:userId')
-  uploadDni(
-    @Param('userId') userId: string,
-    @Body() uploadDniDto: UploadDniDto,
-  ) {
-    return this.client.send('users.upload_dni', { ...uploadDniDto, userId });
+  @Patch('upload-dni/:id')
+  uploadDni(@Param('id') id: string, @Body() uploadDniDto: UploadDniDto) {
+    return this.client.send('users.upload_dni', { ...uploadDniDto, id });
   }
 
-  @Patch('update-status/:userId')
+  @Patch('update-status/:id')
   changeStatus(
-    @Param('userId') userId: string,
+    @Param('id') id: string,
     @Body() updateStatusDto: UpdateStatusDto,
   ) {
-    return this.client.send('users.update_status', {
-      ...updateStatusDto,
-      userId,
-    });
+    return this.client.send('users.update_status', updateStatusDto).pipe(
+      catchError((err) => {
+        throw new RpcException(err.message);
+      }),
+    );
+  }
+
+  @Patch('update-password/:id')
+  changePassword(
+    @Param('id') id: string,
+    @Body() updatePasswordDto: UpdatePasswordDto,
+  ) {
+    return this.client.send('users.update_password', updatePasswordDto).pipe(
+      catchError((err) => {
+        throw new RpcException(err.message);
+      }),
+    );
   }
 }
