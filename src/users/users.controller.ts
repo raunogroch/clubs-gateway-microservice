@@ -56,7 +56,11 @@ export class UsersController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.client.send('users.delete', { id });
+    return this.client.send('users.delete', id).pipe(
+      catchError((err) => {
+        throw new RpcException(err.message);
+      }),
+    );
   }
 
   @Patch('upload-image/:id')
