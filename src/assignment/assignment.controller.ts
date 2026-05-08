@@ -71,4 +71,18 @@ export class AssignmentController {
       }),
     );
   }
+
+  @Patch('admins/:id')
+  updateAdmins(
+    @Param('id') id: string,
+    @Body() updateAssignmentDto: UpdateAssignmentDto,
+  ) {
+    return this.client
+      .send('assignment.update.admins', updateAssignmentDto)
+      .pipe(
+        catchError((err) => {
+          throw new RpcException(err.message);
+        }),
+      );
+  }
 }

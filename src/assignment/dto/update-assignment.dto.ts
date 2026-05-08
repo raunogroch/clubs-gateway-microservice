@@ -5,5 +5,5 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export class UpdateAssignmentDto extends PartialType(CreateAssignmentDto) {
   @IsNotEmpty()
   @IsString()
-  id!: number;
+  id!: string;
 }

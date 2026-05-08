@@ -11,23 +11,23 @@ import { AssignmentStatus } from '../enum/assignment-status.enum';
 export class CreateAssignmentDto {
   @IsString()
   @IsNotEmpty()
-  name!: String;
+  name!: string;
 
-  @IsNotEmpty()
   @IsArray()
-  admins!: String[];
+  @IsOptional()
+  admins?: string[];
 
-  @IsNotEmpty()
   @IsArray()
-  clubs!: String[];
+  @IsOptional()
+  clubs?: string[];
 
   @IsEnum(AssignmentStatus, {
-    message: `Status must be a valid ${Object.values(AssignmentStatus).join(', ')}`,
+    message: `status must be a valid ${Object.values(AssignmentStatus).join(', ')}`,
   })
   @IsOptional()
-  status!: AssignmentStatus;
+  status?: AssignmentStatus;
 
   @IsBoolean()
   @IsOptional()
-  available!: Boolean;
+  available?: boolean;
 }
