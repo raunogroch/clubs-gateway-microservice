@@ -15,7 +15,7 @@ export class CreateAssignmentDto {
 
   @IsArray()
   @IsOptional()
-  admins?: string[];
+  assignmentAdmins?: string[];
 
   @IsArray()
   @IsOptional()

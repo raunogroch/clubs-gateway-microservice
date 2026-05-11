@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { ArrayNotEmpty, IsArray, IsNotEmpty, IsString } from 'class-validator';
 
 export class AdminsAssignmentDto {
   @IsNotEmpty()
@@ -6,6 +6,6 @@ export class AdminsAssignmentDto {
   id!: string;
 
   @IsArray()
-  @IsNotEmpty()
-  admins!: string[];
+  @IsString({ each: true })
+  assignmentAdmins!: string[];
 }

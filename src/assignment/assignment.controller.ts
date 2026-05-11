@@ -6,16 +6,18 @@ import {
   Patch,
   Param,
   Delete,
-  Injectable,
   Inject,
   Query,
 } from '@nestjs/common';
-import { CreateAssignmentDto } from './dto/create-assignment.dto';
-import { UpdateAssignmentDto } from './dto/update-assignment.dto';
 import { NATS_SERVICE } from '../config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { PaginationDto } from '../common';
 import { catchError } from 'rxjs';
+import {
+  AdminsAssignmentDto,
+  CreateAssignmentDto,
+  UpdateAssignmentDto,
+} from './dto';
 
 @Controller('assignment')
 export class AssignmentController {
@@ -75,10 +77,11 @@ export class AssignmentController {
   @Patch('admins/:id')
   updateAdmins(
     @Param('id') id: string,
-    @Body() updateAssignmentDto: UpdateAssignmentDto,
+    @Body() adminsAssignmentDto: AdminsAssignmentDto,
   ) {
+    console.log(adminsAssignmentDto);
     return this.client
-      .send('assignment.update.admins', updateAssignmentDto)
+      .send('assignment.update.admins', adminsAssignmentDto)
       .pipe(
         catchError((err) => {
           throw new RpcException(err.message);
