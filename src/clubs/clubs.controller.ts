@@ -12,8 +12,9 @@ import {
 import { CreateClubDto } from './dto/create-club.dto';
 import { UpdateClubDto } from './dto/update-club.dto';
 import { NATS_SERVICE } from '../config';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { PaginationDto } from '../common';
+import { catchError } from 'rxjs';
 
 @Controller('clubs')
 export class ClubsController {
@@ -21,26 +22,46 @@ export class ClubsController {
 
   @Post()
   create(@Body() createClubDto: CreateClubDto) {
-    return this.client.send('club.create', createClubDto);
+    return this.client.send('club.create', createClubDto).pipe(
+      catchError((err) => {
+        throw new RpcException(err.message);
+      }),
+    );
   }
 
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
-    return this.client.send('club.findAll', paginationDto);
+    return this.client.send('club.findAll', paginationDto).pipe(
+      catchError((err) => {
+        throw new RpcException(err.message);
+      }),
+    );
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.client.send('club.findOne', { id });
+    return this.client.send('club.findOne', id).pipe(
+      catchError((err) => {
+        throw new RpcException(err.message);
+      }),
+    );
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateClubDto: UpdateClubDto) {
-    return this.client.send('club.update', updateClubDto);
+    return this.client.send('club.update', updateClubDto).pipe(
+      catchError((err) => {
+        throw new RpcException(err.message);
+      }),
+    );
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.client.send('club.remove', { id });
+    return this.client.send('club.remove', id).pipe(
+      catchError((err) => {
+        throw new RpcException(err.message);
+      }),
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateClubDto {
   @IsString()
@@ -10,8 +10,14 @@ export class CreateClubDto {
   sport!: string;
 
   @IsString()
+  @IsNotEmpty()
+  assignmentId!: string;
+
+  @IsString()
+  @IsOptional()
   image?: string;
 
   @IsBoolean()
+  @IsOptional()
   available?: boolean;
 }

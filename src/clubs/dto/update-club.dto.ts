@@ -5,7 +5,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export class UpdateClubDto extends PartialType(CreateClubDto) {
   @IsString()
   @IsNotEmpty()
-  id!: number;
+  id!: string;
 
   @IsString()
   @IsNotEmpty()
