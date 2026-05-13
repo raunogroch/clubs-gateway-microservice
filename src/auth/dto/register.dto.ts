@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -37,15 +38,17 @@ export class RegisterDto {
   )
   password!: string;
 
-  @IsEnum(Roles, {
-    message: `Role must be one of: ${Object.values(Roles).join(', ')}`,
-  })
-  @IsOptional()
-  role!: Roles;
-
   @IsOptional()
   @IsEnum(Status, {
     message: `Status must be one of: ${Object.values(Status).join(', ')}`,
   })
   status?: Status;
+
+  @IsOptional()
+  @IsArray()
+  @IsEnum(Roles, {
+    each: true,
+    message: `Roles must be one of: ${Object.values(Roles).join(', ')}`,
+  })
+  roles?: Roles[];
 }
