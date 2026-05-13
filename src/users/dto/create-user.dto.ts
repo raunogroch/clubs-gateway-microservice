@@ -1,20 +1,16 @@
 import {
+  IsArray,
   IsDate,
   IsEnum,
   IsNotEmpty,
-  IsNumber,
+  IsOptional,
   IsString,
   MinLength,
 } from 'class-validator';
-import { Gender, Roles } from '../../enum';
+import { Type } from 'class-transformer';
+import { Gender, Roles, Status } from '../../enum';
 
 export class CreateUserDto {
-  @IsEnum(Roles, {
-    message: `role must be a valid enum value: ${Object.values(Roles).join(', ')}`,
-  })
-  @IsNotEmpty({ message: 'role should not be empty' })
-  role!: Roles;
-
   @IsString({ message: 'username must be a string' })
   @IsNotEmpty({ message: 'username should not be empty' })
   username!: string;
@@ -23,21 +19,49 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'password should not be empty' })
   password!: string;
 
+  @IsOptional()
   @IsString({ message: 'name must be a string' })
-  @IsNotEmpty({ message: 'name should not be empty' })
-  name!: string;
+  name?: string;
 
+  @IsOptional()
   @IsString({ message: 'lastname must be a string' })
-  @IsNotEmpty({ message: 'lastname should not be empty' })
-  lastname!: string;
+  lastname?: string;
 
+  @IsOptional()
   @IsString({ message: 'dni must be a string' })
-  @IsNotEmpty({ message: 'dni should not be empty' })
   @MinLength(6, { message: 'dni must be at least 6 characters long' })
   dni?: string;
 
+  @IsOptional()
   @IsEnum(Gender, {
     message: `gender must be a valid enum value: ${Object.values(Gender).join(', ')}`,
   })
   gender?: Gender;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate({ message: 'birthDate must be a valid date' })
+  birthDate?: Date;
+
+  @IsOptional()
+  @IsString({ message: 'phone must be a string' })
+  phone?: string;
+
+  @IsOptional()
+  @IsString({ message: 'address must be a string' })
+  address?: string;
+
+  @IsOptional()
+  @IsEnum(Status, {
+    message: `status must be a valid enum value: ${Object.values(Status).join(', ')}`,
+  })
+  status?: Status;
+
+  @IsOptional()
+  @IsArray()
+  @IsEnum(Roles, {
+    each: true,
+    message: `Roles must be one of: ${Object.values(Roles).join(', ')}`,
+  })
+  roles?: Roles[];
 }
