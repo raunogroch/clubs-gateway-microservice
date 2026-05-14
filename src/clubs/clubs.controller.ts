@@ -49,7 +49,7 @@ export class ClubsController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateClubDto: UpdateClubDto) {
-    return this.client.send('club.update', updateClubDto).pipe(
+    return this.client.send('club.update', { ...updateClubDto, id }).pipe(
       catchError((err) => {
         throw new RpcException(err.message);
       }),

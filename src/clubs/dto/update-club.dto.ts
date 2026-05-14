@@ -6,22 +6,4 @@ export class UpdateClubDto extends PartialType(CreateClubDto) {
   @IsString()
   @IsNotEmpty()
   id!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  name!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  assignmentId!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  sport!: string;
-
-  @IsString()
-  image?: string;
-
-  @IsNotEmpty()
-  available?: boolean;
 }
