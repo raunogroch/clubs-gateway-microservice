@@ -1,4 +1,5 @@
 import {
+  ArrayUnique,
   IsArray,
   IsBoolean,
   IsEnum,
@@ -14,12 +15,16 @@ export class CreateAssignmentDto {
   name!: string;
 
   @IsArray()
+  @ArrayUnique()
+  @IsString({ each: true })
   @IsOptional()
-  assignmentAdmins?: string[];
+  ownerIds?: string[];
 
   @IsArray()
+  @ArrayUnique()
+  @IsString({ each: true })
   @IsOptional()
-  clubs?: string[];
+  clubIds?: string[];
 
   @IsEnum(AssignmentStatus, {
     message: `status must be a valid ${Object.values(AssignmentStatus).join(', ')}`,

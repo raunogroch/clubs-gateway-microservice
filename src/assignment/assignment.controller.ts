@@ -14,8 +14,8 @@ import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { PaginationDto } from '../common';
 import { catchError } from 'rxjs';
 import {
-  AdminsAssignmentDto,
   CreateAssignmentDto,
+  OwnersAssignmentDto,
   UpdateAssignmentDto,
 } from './dto';
 
@@ -58,7 +58,8 @@ export class AssignmentController {
     @Param('id') id: string,
     @Body() updateAssignmentDto: UpdateAssignmentDto,
   ) {
-    return this.client.send('assignment.update', updateAssignmentDto).pipe(
+    const payload = { ...updateAssignmentDto, id };
+    return this.client.send('assignment.update', payload).pipe(
       catchError((err) => {
         throw new RpcException(err.message);
       }),
@@ -75,17 +76,15 @@ export class AssignmentController {
   }
 
   @Patch('admins/:id')
-  updateAdmins(
+  updateOwners(
     @Param('id') id: string,
-    @Body() adminsAssignmentDto: AdminsAssignmentDto,
+    @Body() ownersAssignmentDto: OwnersAssignmentDto,
   ) {
-    console.log(adminsAssignmentDto);
-    return this.client
-      .send('assignment.update.admins', adminsAssignmentDto)
-      .pipe(
-        catchError((err) => {
-          throw new RpcException(err.message);
-        }),
-      );
+    const payload = { ...ownersAssignmentDto, id };
+    return this.client.send('assignment.update.admins', payload).pipe(
+      catchError((err) => {
+        throw new RpcException(err.message);
+      }),
+    );
   }
 }
