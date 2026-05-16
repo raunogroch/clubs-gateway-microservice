@@ -4,9 +4,10 @@ import { UsersModule } from './users/users.module';
 import { NatsModule } from './transports/nats.module';
 import { AssignmentModule } from './assignment/assignment.module';
 import { ClubsModule } from './clubs/clubs.module';
+import { GroupsModule } from './groups/groups.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, AssignmentModule, ClubsModule],
+  imports: [AuthModule, UsersModule, AssignmentModule, ClubsModule, GroupsModule],
   controllers: [],
   providers: [],
 })

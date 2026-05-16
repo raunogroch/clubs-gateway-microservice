@@ -20,24 +20,24 @@ export class CreateClubDto {
   assignmentId!: string;
 
   @IsString()
-  @IsOptional()
-  phone?: string;
+  @IsNotEmpty()
+  phone!: string;
 
   @IsString()
   @IsOptional()
   image?: string;
 
   @IsString()
-  @IsOptional()
-  address?: string;
+  @IsNotEmpty()
+  address!: string;
 
   @IsString()
-  @IsOptional()
-  city?: string;
+  @IsNotEmpty()
+  city!: string;
 
   @IsString()
-  @IsOptional()
-  country?: string;
+  @IsNotEmpty()
+  country!: string;
 
   @IsEnum(ClubStatus, { message: `Invalid club status` })
   @IsOptional()
