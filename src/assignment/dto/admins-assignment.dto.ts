@@ -1,12 +1,12 @@
-import { ArrayUnique, IsArray, IsOptional, IsString } from 'class-validator';
+import { ArrayUnique, IsArray, IsNotEmpty, IsString } from 'class-validator';
 
 export class OwnersAssignmentDto {
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  id?: string;
+  id!: string;
 
   @IsArray()
   @ArrayUnique()
   @IsString({ each: true })
-  ownerIds!: string[];
+  owners!: string[];
 }

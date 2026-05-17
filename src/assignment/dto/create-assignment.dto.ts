@@ -18,13 +18,13 @@ export class CreateAssignmentDto {
   @ArrayUnique()
   @IsString({ each: true })
   @IsOptional()
-  ownerIds?: string[];
+  owners?: string[];
 
   @IsArray()
   @ArrayUnique()
   @IsString({ each: true })
   @IsOptional()
-  clubIds?: string[];
+  clubs?: string[];
 
   @IsEnum(AssignmentStatus, {
     message: `status must be a valid ${Object.values(AssignmentStatus).join(', ')}`,

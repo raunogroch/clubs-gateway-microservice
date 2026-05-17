@@ -1,5 +1,6 @@
 export enum AssignmentStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
   PENDING = 'PENDING',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
+  SUSPENDED = 'SUSPENDED',
 }
