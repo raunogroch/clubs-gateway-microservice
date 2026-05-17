@@ -5,3 +5,10 @@ node_modules/
 .env
 
 .vscode/
+
+package-lock.json
+npm-debug.log*
+yarn.lock
+.npmrc
+npm-shrinkwrap.json
+.pnpm-debug.log
