@@ -19,7 +19,7 @@ import {
   UpdateAssignmentDto,
 } from './dto';
 
-@Controller('assignment')
+@Controller('assignments')
 export class AssignmentController {
   constructor(
     @Inject(NATS_SERVICE)
