@@ -5,7 +5,7 @@ import { envs } from './config';
 import { RpcCustomExceptionsFilter } from './common/exceptions/rpc-exceptions.filter';
 
 async function bootstrap() {
-  const logger = new Logger('Client-gateway-Main-Bootstrap');
+  const logger = new Logger('Microservice');
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api');
@@ -20,6 +20,6 @@ async function bootstrap() {
 
   await app.listen(envs.port);
 
-  logger.log(`Application is running on: ${envs.port}`);
+  logger.log(`Gateway is running on: ${envs.port}`);
 }
 bootstrap();
