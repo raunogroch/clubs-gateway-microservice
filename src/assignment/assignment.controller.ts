@@ -87,4 +87,13 @@ export class AssignmentController {
       }),
     );
   }
+
+  @Get('userId/:id')
+  findAssignmentByUser(@Param('id') id: string) {
+    return this.client.send('assignment.findByUser', id).pipe(
+      catchError((err) => {
+        throw new RpcException(err.message);
+      }),
+    );
+  }
 }
