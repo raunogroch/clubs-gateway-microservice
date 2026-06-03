@@ -14,9 +14,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { NATS_SERVICE } from '../config';
 import { UpdateStatusDto, UploadDniDto, UploadImageDto } from './dto';
-import { PaginationDto } from '../common';
 import { catchError } from 'rxjs';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { PaginationDto } from '../common/dto/usersPagination.dto';
 
 @Controller('users')
 export class UsersController {
