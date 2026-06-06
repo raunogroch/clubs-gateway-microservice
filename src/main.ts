@@ -11,7 +11,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   app.enableCors({
-    origin: envs.corsOrigin || '*',
+    origin: envs.corsOrigin,
     credentials: true,
   });
 
