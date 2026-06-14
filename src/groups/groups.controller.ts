@@ -13,7 +13,7 @@ import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { NATS_SERVICE } from '../config';
 import { ClientProxy } from '@nestjs/microservices';
-import { PaginationDto } from '../common';
+import { PaginationDto } from '../common/dto/groupPagination.dto';
 
 @Controller('groups')
 export class GroupsController {
