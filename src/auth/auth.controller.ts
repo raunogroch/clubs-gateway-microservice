@@ -7,7 +7,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { LoginDto, LogoutDto, RegisterDto, ValidateTokenDto } from './dto';
+import { LoginDto, RegisterDto } from './dto';
 import { NATS_SERVICE } from '../config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { catchError } from 'rxjs';

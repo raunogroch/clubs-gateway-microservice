@@ -6,8 +6,10 @@ import {
   IsOptional,
   IsString,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { MembershipDto } from './membership.dto';
 import { Gender, Roles, Status } from '../../enum';
 
 export class CreateUserDto {
@@ -64,4 +66,10 @@ export class CreateUserDto {
     message: `Roles must be one of: ${Object.values(Roles).join(', ')}`,
   })
   roles?: Roles[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => MembershipDto)
+  memberships?: MembershipDto[];
 }

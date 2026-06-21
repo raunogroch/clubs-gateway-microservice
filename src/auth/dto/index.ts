@@ -1,4 +1,3 @@
 export * from './register.dto';
 export * from './login.dto';
-export * from './logout.dto';
-export * from './validate-token.dto';
+export { MembershipDto } from '../../users/dto/membership.dto';
