@@ -12,7 +12,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { GroupScheduleDto } from './group-schedule.dto';
-import { GroupStatus } from '../../enum';
+import { CoachRoles, GroupStatus } from '../../enum';
 
 export class CreateGroupDto {
   @IsString({ message: 'name must be a string' })
@@ -55,7 +55,7 @@ export class CreateGroupDto {
 
   @IsOptional()
   @IsEnum(GroupStatus, {
-    message: `status must be a valid enum value: ${Object.values(GroupStatus).join(', ')}`,
+    message: `status must be a valid value: ${Object.values(GroupStatus).join(', ')}`,
   })
   status?: GroupStatus;
 
@@ -65,8 +65,11 @@ export class CreateGroupDto {
 
   @IsOptional()
   @IsArray({ message: 'coaches must be an array' })
-  @IsString({ each: true, message: 'Each coach id must be a string' })
-  coaches?: string[];
+  @IsString({
+    each: true,
+    message: `status must be a valid value: ${Object.values(CoachRoles).join(', ')}`,
+  })
+  coaches?: CoachRoles[];
 
   @IsOptional()
   @IsArray({ message: 'schedules must be an array' })
