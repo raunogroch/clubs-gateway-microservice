@@ -36,7 +36,10 @@ export class GroupsController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateGroupDto: UpdateGroupDto) {
-    return this.client.send('group.update', updateGroupDto);
+    return this.client.send('group.update', {
+      ...updateGroupDto,
+      id,
+    });
   }
 
   @Delete(':id')
