@@ -6,51 +6,33 @@ import {
   Patch,
   Param,
   Delete,
-  Inject,
   Query,
 } from '@nestjs/common';
-import { NATS_SERVICE } from '../config';
-import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { PaginationDto } from '../common';
-import { catchError } from 'rxjs';
 import {
   CreateAssignmentDto,
   OwnersAssignmentDto,
   UpdateAssignmentDto,
 } from './dto';
+import { NatsClientService } from '../transports/nats-client.service';
 
 @Controller('assignments')
 export class AssignmentController {
-  constructor(
-    @Inject(NATS_SERVICE)
-    private readonly client: ClientProxy,
-  ) {}
+  constructor(private readonly clientService: NatsClientService) {}
 
   @Post()
   create(@Body() createAssignmentDto: CreateAssignmentDto) {
-    return this.client.send('assignment.create', createAssignmentDto).pipe(
-      catchError((err) => {
-        throw new RpcException(err.message);
-      }),
-    );
+    return this.clientService.send('assignment.create', createAssignmentDto);
   }
 
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
-    return this.client.send('assignment.findAll', paginationDto).pipe(
-      catchError((err) => {
-        throw new RpcException(err.message);
-      }),
-    );
+    return this.clientService.send('assignment.findAll', paginationDto);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.client.send('assignment.findOne', id).pipe(
-      catchError((err) => {
-        throw new RpcException(err.message);
-      }),
-    );
+    return this.clientService.send('assignment.findOne', id);
   }
 
   @Patch(':id')
@@ -59,20 +41,12 @@ export class AssignmentController {
     @Body() updateAssignmentDto: UpdateAssignmentDto,
   ) {
     const payload = { ...updateAssignmentDto, id };
-    return this.client.send('assignment.update', payload).pipe(
-      catchError((err) => {
-        throw new RpcException(err.message);
-      }),
-    );
+    return this.clientService.send('assignment.update', payload);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.client.send('assignment.remove', id).pipe(
-      catchError((err) => {
-        throw new RpcException(err.message);
-      }),
-    );
+    return this.clientService.send('assignment.remove', id);
   }
 
   @Patch('admins/:id')
@@ -81,19 +55,11 @@ export class AssignmentController {
     @Body() ownersAssignmentDto: OwnersAssignmentDto,
   ) {
     const payload = { ...ownersAssignmentDto, id };
-    return this.client.send('assignment.update.admins', payload).pipe(
-      catchError((err) => {
-        throw new RpcException(err.message);
-      }),
-    );
+    return this.clientService.send('assignment.update.admins', payload);
   }
 
   @Get('userId/:id')
   findAssignmentByUser(@Param('id') id: string) {
-    return this.client.send('assignment.findByUser', id).pipe(
-      catchError((err) => {
-        throw new RpcException(err.message);
-      }),
-    );
+    return this.clientService.send('assignment.findByUser', id);
   }
 }

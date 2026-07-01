@@ -6,62 +6,39 @@ import {
   Patch,
   Param,
   Delete,
-  Inject,
   Query,
 } from '@nestjs/common';
 import { CreateClubDto } from './dto/create-club.dto';
 import { UpdateClubDto } from './dto/update-club.dto';
-import { NATS_SERVICE } from '../config';
-import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { PaginationDto } from '../common';
-import { catchError } from 'rxjs';
+import { NatsClientService } from '../transports/nats-client.service';
 
 @Controller('clubs')
 export class ClubsController {
-  constructor(@Inject(NATS_SERVICE) private readonly client: ClientProxy) {}
+  constructor(private readonly clientService: NatsClientService) {}
 
   @Post()
   create(@Body() createClubDto: CreateClubDto) {
-    return this.client.send('club.create', createClubDto).pipe(
-      catchError((err) => {
-        throw new RpcException(err.message);
-      }),
-    );
+    return this.clientService.send('club.create', createClubDto);
   }
 
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
-    return this.client.send('club.findAll', paginationDto).pipe(
-      catchError((err) => {
-        throw new RpcException(err.message);
-      }),
-    );
+    return this.clientService.send('club.findAll', paginationDto);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.client.send('club.findOne', id).pipe(
-      catchError((err) => {
-        throw new RpcException(err.message);
-      }),
-    );
+    return this.clientService.send('club.findOne', id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateClubDto: UpdateClubDto) {
-    return this.client.send('club.update', { ...updateClubDto, id }).pipe(
-      catchError((err) => {
-        throw new RpcException(err.message);
-      }),
-    );
+    return this.clientService.send('club.update', { ...updateClubDto, id });
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.client.send('club.remove', id).pipe(
-      catchError((err) => {
-        throw new RpcException(err.message);
-      }),
-    );
+    return this.clientService.send('club.remove', id);
   }
 }
