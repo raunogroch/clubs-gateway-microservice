@@ -7,13 +7,20 @@ import {
   Param,
   Delete,
   Query,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
+  ValidationPipe,
+  UsePipes,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UpdateStatusDto, UploadDniDto, UploadImageDto } from './dto';
+import { UpdateStatusDto } from './dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { PaginationDto } from '../common/dto/usersPagination.dto';
 import { NatsClientService } from '../transports/nats-client.service';
+import { UploadFileBodyDto } from './dto/upload-file-body.dto';
 
 @Controller('users')
 export class UsersController {
@@ -44,17 +51,98 @@ export class UsersController {
     return this.clientService.send('users.delete', id);
   }
 
-  @Patch('upload-image/:id')
-  uploadImage(@Param('id') id: string, @Body() uploadImageDto: UploadImageDto) {
-    return this.clientService.send('users.upload_image', {
-      ...uploadImageDto,
-      id,
+  @Patch('upload-file/:id')
+  @UsePipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+    }),
+  )
+  @UseInterceptors(FileInterceptor('file'))
+  uploadImage(
+    @Param('id') id: string,
+    @UploadedFile()
+    file: { buffer?: Buffer; mimetype?: string; originalname?: string },
+    @Body() body: UploadFileBodyDto,
+  ) {
+    if (!file?.buffer) {
+      throw new BadRequestException('A file must be provided');
+    }
+
+    const mimeType = file.mimetype || 'application/octet-stream';
+    const normalizedOriginalName = this.normalizeOriginalName(
+      body.originalName ?? file.originalname,
+      mimeType,
+    );
+
+    return this.clientService.send('storage.upload_file', {
+      userId: id,
+      buffer: file.buffer,
+      mimeType,
+      originalName: normalizedOriginalName,
+      type: this.normalizeFileType(body.type ?? 'PROFILE_IMAGE'),
     });
   }
 
   @Patch('upload-dni/:id')
-  uploadDni(@Param('id') id: string, @Body() uploadDniDto: UploadDniDto) {
-    return this.clientService.send('users.upload_dni', { ...uploadDniDto, id });
+  @UseInterceptors(FileInterceptor('file'))
+  uploadDni(
+    @Param('id') id: string,
+    @UploadedFile()
+    file: { buffer?: Buffer; mimetype?: string; originalname?: string },
+    @Body('originalName') originalName?: string,
+  ) {
+    if (!file?.buffer) {
+      throw new BadRequestException('A file must be provided');
+    }
+
+    if (file.mimetype !== 'application/pdf') {
+      throw new BadRequestException('Only PDF files are allowed');
+    }
+
+    const normalizedOriginalName = this.normalizeOriginalName(
+      originalName ?? file.originalname,
+      'application/pdf',
+    );
+
+    return this.clientService.send('storage.upload_file', {
+      userId: id,
+      buffer: file.buffer,
+      mimeType: 'application/pdf',
+      originalName: normalizedOriginalName,
+      type: 'DNI_PDF',
+    });
+  }
+
+  private normalizeOriginalName(
+    originalName: string | undefined,
+    mimeType: string,
+  ): string {
+    const fallbackExtension = mimeType === 'application/pdf' ? 'pdf' : 'bin';
+    const value = originalName?.trim();
+
+    if (!value) {
+      return `file.${fallbackExtension}`;
+    }
+
+    return value.includes('.') ? value : `${value}.${fallbackExtension}`;
+  }
+
+  private normalizeFileType(type: string): string {
+    const normalized = type?.trim().toUpperCase();
+
+    switch (normalized) {
+      case 'PROFILE_IMAGE':
+      case 'DNI_PDF':
+      case 'MEDICAL_RECORD':
+      case 'CONTRACT':
+      case 'OTHER':
+        return normalized;
+      default:
+        return 'PROFILE_IMAGE';
+    }
   }
 
   @Patch('update-status/:id')

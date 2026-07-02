@@ -4,6 +4,7 @@ import { UsersModule } from './users/users.module';
 import { AssignmentModule } from './assignment/assignment.module';
 import { ClubsModule } from './clubs/clubs.module';
 import { GroupsModule } from './groups/groups.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { GroupsModule } from './groups/groups.module';
     AssignmentModule,
     ClubsModule,
     GroupsModule,
+    StorageModule,
   ],
   controllers: [],
   providers: [],

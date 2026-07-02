@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsBase64 } from 'class-validator';
+import { IsString, IsNotEmpty, IsBase64, IsOptional } from 'class-validator';
 
 export class UploadDniDto {
   @IsString({ message: 'userId debe ser un string' })
@@ -9,4 +9,8 @@ export class UploadDniDto {
   @IsNotEmpty({ message: 'pdfBase64 es requerido' })
   @IsBase64()
   pdfBase64!: string;
+
+  @IsOptional()
+  @IsString()
+  originalName?: string;
 }

@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { RequestMethod } from '@nestjs/common';
 import { envs } from './config';
 import { RpcCustomExceptionsFilter } from './common/exceptions/rpc-exceptions.filter';
 
@@ -8,7 +9,9 @@ async function bootstrap() {
   const logger = new Logger('Microservice');
   const app = await NestFactory.create(AppModule);
 
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api', {
+    exclude: [{ path: 'storage/(.*)', method: RequestMethod.ALL }],
+  });
 
   app.enableCors({
     origin: envs.corsOrigin,
